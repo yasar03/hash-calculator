@@ -47,10 +47,11 @@
         }
 
         window.onload = function() {
-            console.log("Page loaded, waiting for message..."); // Add logging to check load event
-            window.addEventListener('message', async function(event) {
-                console.log("Message received:", event.data);  // Log received message
-                const data = JSON.parse(event.data);
+            console.log("Page loaded, waiting for message...");
+
+            ThunkableWebviewerExtension.receiveMessage(async function(event) {
+                console.log("Message received from Thunkable WebViewer:", event);  // Log received message
+                const data = JSON.parse(event);
                 const hashHex = await calculateHash(data.key, data.txnid, data.amount, data.productinfo, data.firstname, data.email, data.salt);
                 ThunkableWebviewerExtension.postMessage(hashHex); // Send hashHex back to Thunkable
                 console.log("Hash sent:", hashHex);
@@ -59,3 +60,4 @@
     </script>
 </body>
 </html>
+
