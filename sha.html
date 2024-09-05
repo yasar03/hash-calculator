@@ -12,13 +12,16 @@
             const hash = await crypto.subtle.digest('SHA-512', data);
             const hashArray = Array.from(new Uint8Array(hash)); 
             const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            ThunkableWebviewerExtension.postMessage(hashHex); // Send hash back to Thunkable
+            // ThunkableWebviewerExtension.postMessage(hashHex); // Send hash back to Thunkable
+
+            return hashHex
         }
 
         window.onload = function() {
-            window.addEventListener('message', function(event) {
+            window.addEventListener('message',  async function(event) {
                 const data = JSON.parse(event.data);
-                calculateHash(data.key, data.txnid, data.amount, data.productinfo, data.firstname, data.email, data.salt);
+                const hashHex = await calculateHash(data.key, data.txnid, data.amount, data.productinfo, data.firstname, data.email, data.salt);
+                ThunkableWebviewerExtension.postMessage(hashHex); 
             });
         }
     </script>
