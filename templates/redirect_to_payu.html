@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting to Payment Gateway</title>
+</head>
+<body>
+    <form id="paymentForm" action="https://test.payu.in/_payment" method="POST">
+        {% for key, value in payment_data.items() %}
+            <input type="hidden" name="{{ key }}" value="{{ value }}">
+        {% endfor %}
+        <input type="submit" value="Submit">
+    </form>
+    <script>
+        document.getElementById('paymentForm').submit();
+    </script>
+</body>
+</html>

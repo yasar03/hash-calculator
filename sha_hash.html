@@ -1,0 +1,22 @@
+<html>
+<body>
+    <script>
+        async function calculateHash(key, txnid, amount, productinfo, firstname, email, salt) {
+            const hashString = `${key}|${txnid}|${amount}|${productinfo}|${firstname}|${email}|||||||||||${salt}`;
+            const encoder = new TextEncoder();
+            const data = encoder.encode(hashString);
+            const hash = await crypto.subtle.digest('SHA-512', data);
+            const hashArray = Array.from(new Uint8Array(hash)); 
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            ThunkableWebviewerExtension.postMessage(hashHex); // Send hash back to Thunkable
+        }
+
+        window.onload = function() {
+            window.addEventListener('message', function(event) {
+                const data = JSON.parse(event.data);
+                calculateHash(data.key, data.txnid, data.amount, data.productinfo, data.firstname, data.email, data.salt);
+            });
+        }
+    </script>
+</body>
+</html>
